@@ -1,0 +1,20 @@
+{
+    "p_init": "祈祷中...",
+    "p_taketime": "请稍候片刻，马上就好哦=v=",
+    "lbl_convertto": "转换成 ",
+    "lbl_withmode": "，模式为 ",
+    "opt_hiragana": "平假名",
+    "opt_katakana": "片假名",
+    "opt_romaji": "罗马字",
+    "opt_normal": "正常",
+    "opt_spaced": "空格分隔",
+    "opt_okurigana": "送假名",
+    "opt_furigana": "注音假名",
+    "btn_convert": "转换",
+    "lbl_result": "结果:",
+    "btn_copytoclip": "复制到剪贴板",
+    "btn_savetofile": "保存成文件",
+    "msg_resultcopied": "已复制",
+    "msg_erroroccurred": "纳尼!出错了...",
+    "msg_saved": "已保存"
+}

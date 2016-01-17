@@ -1,0 +1,21 @@
+{
+    "p_init": "Initiating...",
+    "p_taketime": "It may take several seconds.",
+    "lbl_oritext": "Original Text:",
+    "lbl_convertto": "Convert to ",
+    "lbl_withmode": "with mode ",
+    "opt_hiragana": "Hiragana",
+    "opt_katakana": "Katakana",
+    "opt_romaji": "Romaji",
+    "opt_normal": "Normal",
+    "opt_spaced": "Spaced",
+    "opt_okurigana": "Okurigana",
+    "opt_furigana": "Furigana",
+    "btn_convert": "Convert",
+    "lbl_result": "Result:",
+    "btn_copytoclip": "Copy To Clipboard",
+    "btn_savetofile": "Save To File",
+    "msg_resultcopied": "Result Copied",
+    "msg_erroroccurred": "Oops, an error occurred",
+    "msg_saved": "Saved"
+}

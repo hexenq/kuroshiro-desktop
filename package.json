@@ -1,0 +1,29 @@
+{
+  "name": "kuroshiro.js-desktop",
+  "version": "0.0.1",
+  "description": "Desktop application of kuroshiro.js.",
+  "main": "main.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hexenq/kuroshiro.js-desktop.git"
+  },
+  "keywords": [
+    "kuroshiro",
+    "japanese",
+    "hiragana",
+    "katakana",
+    "romaji",
+    "okurigana",
+    "furigana",
+    "convert"
+  ],
+  "author": "Hexen Qi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hexenq/kuroshiro.js-desktop/issues"
+  },
+  "homepage": "https://github.com/hexenq/kuroshiro.js-desktop"
+}
