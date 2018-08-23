@@ -8,14 +8,27 @@ pids
 *.pid
 *.seed
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
-
 # Dependency directory
-bower_components
 node_modules
+bower_components
+components
 
 # Workspace
 *.sublime-workspace
-/app/bower_components
-/.idea
+.idea
+.vscode
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Generated files
+dist/*
+lib/*
+
+# Others
+.DS_Store
+package-lock.json
+*.map
+docs
+tmp
+!**/.gitkeep

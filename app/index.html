@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #init {
+            display: flex;
+            height: 300px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #output {
+            border: 1px solid black;
+            padding: 10px 0px 5px 5px;
+            height: 100px;
+            overflow-y: auto;
+        }
+
+        #msgbox {
+            padding: 2px 4px;
+            background: black;
+            color: white;
+            border-radius: 10%;
+            opacity: 0;
+        }
+
+        .showmsg {
+            animation-name: ease-in-out;
+            animation-duration: 1s;
+            animation-timing-function: linear;
+        }
+
+        @keyframes ease-in-out {
+            0% {
+                opacity: 0
+            }
+            20% {
+                opacity: 1
+            }
+            50% {
+                opacity: 1
+            }
+            100% {
+                opacity: 0
+            }
+        }
+
+        .option {
+            display: inline-block;
+            margin-right: 1em;
+        }
+        
+        #convertBtn{
+            font-size: 13pt;
+            padding: 2px 0;
+            margin-top: 5px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="demoArea">
+        <label data-i18n="lbl_oritext">Original Text:</label>
+        <div>
+            <textarea id="oritext" style="font-size:11pt;width:100%;resize: none;" rows="6">感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！</textarea>
+        </div>
+        <div class="option">
+            <label data-i18n="lbl_convertto">To </label>
+            <select id="to" name="to" tabindex="2">
+                <option value="hiragana" selected="" data-i18n="opt_hiragana">Hiragana</option>
+                <option value="katakana" data-i18n="opt_katakana">Katakana</option>
+                <option value="romaji" data-i18n="opt_romaji">Romaji</option>
+            </select>
+        </div>
+        <div class="option">
+            <label data-i18n="lbl_withmode"> Mode </label>
+            <select id="mode" name="mode" tabindex="1">
+                <option value="normal" selected="" data-i18n="opt_normal">Normal</option>
+                <option value="spaced" data-i18n="opt_spaced">Spaced</option>
+                <option value="okurigana" data-i18n="opt_okurigana">Okurigana</option>
+                <option value="furigana" data-i18n="opt_furigana">Furigana</option>
+            </select>
+        </div>
+        <div id="romajiOption" class="option" style="display:none">
+            <label data-i18n="lbl_romajisystem"> Romaji System </label>
+            <select id="romajiSystem" name="romajiSystem" tabindex="3">
+                <option value="nippon" data-i18n="opt_nippon" selected="">Nippon</option>
+                <option value="passport" data-i18n="opt_passport">Passport</option>
+                <option value="hepburn" data-i18n="opt_hepburn">Hepburn</option>
+            </select>
+        </div>
+        <br />
+        <button id="convertBtn" onclick="convert()" data-i18n="btn_convert">Convert</button>
+        <div style="margin: 10px 0">
+            <div>
+                <label data-i18n="lbl_result">Result:</label>
+                <div id="output" style="width:100%" rows="6" readonly="readonly"></div>
+            </div>
+            <div style="margin: 5px 0 5px 0;">
+                <button onclick="copytoclip()" style="z-index: 100;margin-right:2px" data-i18n="btn_copytoclip">Copy To Clipboard</button>
+                <button onclick="savetofile()" style="z-index: 100" data-i18n="btn_savetofile">Save To File</button>
+                <span id="msgbox" style="float:right"></span>
+            </div>
+        </div>
+    </div>
+    <script>
+        const { clipboard } = require('electron');
+        const { dialog } = require('electron').remote;
+        const fs = require('fs');
+
+        var i18n;
+        var locale = (navigator.language && navigator.language.replace(/-/, '_')) || 'en_US';
+
+        function initI18N() {
+            var targets = document.querySelectorAll('[data-i18n]');
+            for (var i = 0; i < targets.length; i++) {
+                if (i18n[targets[i].dataset.i18n])
+                    targets[i].innerHTML = i18n[targets[i].dataset.i18n];
+            }
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    i18n = JSON.parse(xhr.responseText);
+                    initI18N();
+                } else {
+                    var xhr2 = new XMLHttpRequest();
+                    xhr2.onreadystatechange = function () {
+                        if (xhr2.readyState == 4 && xhr2.status == 200) {
+                            i18n = JSON.parse(xhr2.responseText);
+                            initI18N();
+                        }
+                    };
+                    xhr2.open('get', 'locale/en_US.json', true);
+                    xhr2.send();
+                }
+            }
+        };
+        xhr.open('get', 'locale/' + locale + '.json', true);
+        xhr.send();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('to').onchange = function (evt) {
+                if (evt.target.value == "romaji") {
+                    document.getElementById("romajiOption").setAttribute("style", "display:inline-block");
+                } else {
+                    document.getElementById("romajiOption").setAttribute("style", "display:none");
+                }
+            };
+        }, false);
+
+        function convert() {
+            document.getElementById("convertBtn").textContent = i18n["btn_converting"];
+            document.getElementById("convertBtn").disabled = true;
+            fetch("https://api.kuroshiro.org/convert", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify({
+                    str: document.getElementById("oritext").value,
+                    to: document.getElementById("to").value,
+                    mode: document.getElementById("mode").value,
+                    romajiSystem: document.getElementById("romajiSystem").value
+                })
+            })
+                .then((resp) => {
+                    if (resp.ok) {
+                        return resp.json();
+                    } else if (resp.status == 429) {
+                        document.getElementById("output").innerHTML = "<p>Error:</p>" + "Too many request. Please try again later.";
+                        throw new Error("Too many request");
+                    } else {
+                        document.getElementById("output").innerHTML = "<p>Error:</p>" + "Something wrong. Please try again later.";
+                        throw new Error("Something wrong");
+                    }
+                })
+                .then((result) => {
+                    document.getElementById("output").innerHTML = result.result;
+                    document.getElementById("convertBtn").textContent = i18n["btn_convert"];
+                    document.getElementById("convertBtn").disabled = false;
+                })
+                .catch((err) => {
+                    console.error(err);
+                    document.getElementById("output").innerHTML = "<p>Error:</p>" + "Something wrong. Please try again later.";
+                    document.getElementById("convertBtn").textContent = i18n["btn_convert"];
+                    document.getElementById("convertBtn").disabled = false;
+                })
+        }
+
+        function copytoclip() {
+            clipboard.writeText(document.getElementById("output").innerHTML);
+            showmsg(i18n["msg_resultcopied"]);
+        }
+
+        function savetofile() {
+            dialog.showSaveDialog(function (fileName) {
+                if (fileName === undefined) return;
+                fs.writeFile(fileName, document.getElementById("output").innerHTML, function (err) {
+                    if (err)
+                        showmsg(i18n["msg_erroroccurred"]);
+
+                    showmsg(i18n["msg_saved"]);
+                });
+            });
+        }
+
+        function showmsg(str) {
+            var e = document.getElementById("msgbox");
+            e.innerHTML = str;
+            e.addEventListener("animationend", function () {
+                e.className = '';
+            }, false);
+            e.className = 'showmsg';
+        }
+    </script>
+</body>
+</html>
