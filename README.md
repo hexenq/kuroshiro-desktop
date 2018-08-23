@@ -1,2 +1,2 @@
-# kuroshiro.js-desktop
-Desktop application of kuroshiro.js.
+# kuroshiro-desktop
+Desktop application of kuroshiro.
