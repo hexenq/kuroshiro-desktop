@@ -1,32 +1,54 @@
 {
-  "name": "kuroshiro-desktop",
-  "version": "0.0.5",
-  "description": "Desktop application of kuroshiro.",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hexenq/kuroshiro-desktop.git"
-  },
-  "keywords": [
-    "kuroshiro",
-    "japanese",
-    "hiragana",
-    "katakana",
-    "romaji",
-    "okurigana",
-    "furigana",
-    "convert"
-  ],
-  "author": "Hexen Qi",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hexenq/kuroshiro-desktop/issues"
-  },
-  "homepage": "https://github.com/hexenq/kuroshiro-desktop",
-  "devDependencies": {
-    "electron": "^2.0.8"
-  }
+    "name": "kuroshiro-desktop",
+    "version": "0.0.5",
+    "description": "Desktop application of kuroshiro.",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder"
+    },
+    "postinstall": "electron-builder install-app-deps",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hexenq/kuroshiro-desktop.git"
+    },
+    "keywords": [
+        "kuroshiro",
+        "japanese",
+        "hiragana",
+        "katakana",
+        "romaji",
+        "okurigana",
+        "furigana",
+        "convert"
+    ],
+    "author": "Hexen Qi",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/hexenq/kuroshiro-desktop/issues"
+    },
+    "homepage": "https://github.com/hexenq/kuroshiro-desktop",
+    "devDependencies": {
+        "electron": "^2.0.8",
+        "electron-builder": "^20.28.2"
+    },
+    "build": {
+        "appId": "com.hexenq.kuroshiro.desktop",
+        "mac": {
+            "category": "public.app-category.utilities"
+        },
+        "win": {
+            "target": [
+                {
+                    "target": "portable",
+                    "arch": [
+                        "x64",
+                        "ia32"
+                    ]
+                }
+            ],
+            "icon": "app/icon.png"
+        }
+    }
 }
